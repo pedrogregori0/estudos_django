@@ -3,7 +3,8 @@ from django.http import HttpResponse, Http404
 from utils.recipes.factory import make_recipe
 from recipes.models import Recipe
 # Create your views here.
-
+# no padrão MVC (model-view-controller) aqui seria o CONTROLLER (aqui chamado de VIEW)
+# a VIEW é o intermediario entre o MODEL e o TEMPLATE (MODEL -> VIEW <- TEMPLATE)
 
 def home(request):
     recipes = Recipe.objects.filter(
@@ -40,3 +41,12 @@ def recipe(request, id):
     
     })
 
+def search(request):
+    search_term = request.GET.get('q', '').strip()
+    
+    if not search_term:
+        raise Http404()
+    
+    return render(request, 'recipes/pages/search.html', {
+        'page_title': f'Search for "{search_term}" | ',
+    })

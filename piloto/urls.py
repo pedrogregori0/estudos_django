@@ -21,7 +21,9 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('recipes.urls')) # '' é o caminho, o que for colocado ali entra depois de dominio.com/ ... / 
+    path('', include('recipes.urls')), # '' é o caminho, o que for colocado ali entra depois de dominio.com/ ... / 
+    path('authors/', include('authors.urls')) # '' é o caminho, o que for colocado ali entra depois de dominio.com/ ... / 
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

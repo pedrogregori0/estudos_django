@@ -1,27 +1,7 @@
-import re
-
 from django import forms
 from django.contrib.auth.models import User
 from django.forms import ValidationError
-
-def adicionar_attr(field, attr_name, attr_novo_valor):
-    attr_existente = field.widget.attrs.get(attr_name, '')
-    field.widget.attrs[attr_name] = f'{attr_existente} {attr_novo_valor}'.strip() 
-
-def adicionar_placeholder(field, placeholder_val):
-    adicionar_attr(field, 'placeholder', placeholder_val)
-
-def strong_password(password):
-    regex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$') # faz a validação da senha
-
-    if not regex.match(password):
-        raise ValidationError((
-            'Password must have at least one uppercase letter, '
-            'one lowercase letter and one number. The length should be '
-            'at least 8 characters.'
-        ),
-            code='invalid'
-        )
+from utils.djando_forms import adicionar_placeholder, strong_password
 
 class RegisterForm(forms.ModelForm):
 
@@ -106,10 +86,12 @@ class RegisterForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '')
-        exists = User.objects.filter(email= email).exists
+        exists = User.objects.filter(email=email).exists()
         if exists:
             raise ValidationError('O e-mail inserido já esta vinculado a um Usuário', code='invalid')
         
+        return email
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
